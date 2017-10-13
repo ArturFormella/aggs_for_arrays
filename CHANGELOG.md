@@ -1,3 +1,7 @@
+## 1.4.0 - 2017-10-10
+
+Added `faceted_count`.
+
 ## 1.3.0 - 2017-10-10
 
 Added `array_to_count`.
