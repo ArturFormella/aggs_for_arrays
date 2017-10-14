@@ -108,18 +108,42 @@ LANGUAGE c IMMUTABLE;
 CREATE OR REPLACE FUNCTION
 faceted_count_transfn(internal, anyarray)
 RETURNS internal
-AS 'aggs_for_vecs', 'faceted_count_transfn'
+AS 'aggs_for_arrays', 'faceted_count_transfn'
 LANGUAGE c;
 
 CREATE OR REPLACE FUNCTION
 faceted_count_finalfn(internal, anyarray)
 RETURNS anyarray
-AS 'aggs_for_vecs', 'faceted_count_finalfn'
+AS 'aggs_for_arrays', 'faceted_count_finalfn'
+LANGUAGE c;
+
+CREATE OR REPLACE FUNCTION
+faceted_count_combine(internal, internal)
+RETURNS internal
+AS 'aggs_for_arrays', 'faceted_count_combine'
+LANGUAGE c;
+
+
+CREATE OR REPLACE FUNCTION
+faceted_count_serial(internal)
+RETURNS bytea
+AS 'aggs_for_arrays', 'faceted_count_serial'
+LANGUAGE c;
+
+
+CREATE OR REPLACE FUNCTION
+faceted_count_deserial(bytea, internal)
+RETURNS internal
+AS 'aggs_for_arrays', 'faceted_count_deserial'
 LANGUAGE c;
 
 CREATE AGGREGATE faceted_count(anyarray) (
   sfunc = faceted_count_transfn,
   stype = internal,
   finalfunc = faceted_count_finalfn,
+  COMBINEFUNC = faceted_count_combine,
+  SERIALFUNC = faceted_count_serial,
+  DESERIALFUNC = faceted_count_deserial,
+  PARALLEL = SAFE,
   finalfunc_extra
 );
